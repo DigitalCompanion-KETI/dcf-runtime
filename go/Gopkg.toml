@@ -25,4 +25,4 @@
 # #   unused-packages = true
 #
 
-ignored = ["github.com/keti-dcf/dcf-watcher/go/pb"]
+ignored = ["github.com/digitalcompanion-keti/dcf-watcher/go/pb"]

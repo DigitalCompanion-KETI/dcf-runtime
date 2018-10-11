@@ -15,7 +15,7 @@ ENV HANDLER_FILE=${GOPATH}/src/dcf/handler/handler
 ENV HANDLER_NAME=${handler_name}
 
 # Copy dcf-watcher
-RUN cp ${GOPATH}/src/github.com/keti-dcf/dcf-watcher/go/dcf-watcher /dcf-watcher
+RUN cp ${GOPATH}/src/github.com/digitalcompanion-keti/dcf-watcher/go/dcf-watcher /dcf-watcher
 RUN chmod +x /dcf-watcher
 
 # Install dep
