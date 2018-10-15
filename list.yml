@@ -17,5 +17,11 @@ runtimes:
       name: Handler
   tensorflow-gpu:
     dir: tensorflow-gpu
+    handler:
+      file: handler.py
+      name: Handler
+  tensorflow:
+    dir: tensorflow
+    handler:
       file: handler.py
       name: Handler
