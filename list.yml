@@ -5,13 +5,10 @@ runtimes:
       - GO_VERSION=1.10
     handler:
       name: Handler
-  python2:
-    dir: python2
-    handler:
-      file: handler.py
-      name: Handler
-  python3:
-    dir: python3
+  python:
+    dir: python
+    build_args:
+      - PYTHON_VERSION=3.4
     handler:
       file: handler.py
       name: Handler

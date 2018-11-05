@@ -1,12 +1,18 @@
 # Argrumnets for FROM
-ARG REGISTRY
 ARG GO_VERSION=1.9.7
-ARG WATCHER_VERSION=0.1.0
 
-# Get watcher - if watcher is uploaded on github, remove this line.
-FROM ${REGISTRY}/watcher:${WATCHER_VERSION}-go as watcher
+FROM golang:${GO_VERSION}
+
+ARG ADDITIONAL_PACKAGE
+RUN apt-get update && apt-get install -y  \
+	build-essential \
+	wget \
+	tar \
+	${ADDITIONAL_PACKAGE} \
+	&& rm -rf /var/lib/apt/lists/*
 
 # Function Build & Run
+ARG WATCHER_VERSION=0.1.0
 ARG handler_file
 ARG handler_name=Handler
 
@@ -14,13 +20,20 @@ ENV HANDLER_DIR=${GOPATH}/src/dcf/handler
 ENV HANDLER_FILE=${GOPATH}/src/dcf/handler/handler
 ENV HANDLER_NAME=${handler_name}
 
-# Copy dcf-watcher
-RUN cp ${GOPATH}/src/github.com/digitalcompanion-keti/dcf-watcher/go/dcf-watcher /dcf-watcher
-RUN chmod +x /dcf-watcher
-
 # Install dep
 RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
+# Get dcf-watcher
+RUN mkdir -p ${GOPATH}/src/github.com/digitalcompanion-keti/dcf-watcher/go
+WORKDIR ${GOPATH}/src/github.com/digitalcompanion-keti/dcf-watcher/go
+RUN wget https://github.com/DigitalCompanion-KETI/DCFramework/releases/download/v${WATCHER_VERSION}/watcher${WATCHER_VERSION}-go.tar
+RUN tar xvf watcher${WATCHER_VERSION}-go.tar
+RUN dep ensure
+RUN go build -o dcf-watcher .
+RUN cp ./dcf-watcher /dcf-watcher
+RUN chmod +x /dcf-watcher
+
+# Copy user Function
 RUN mkdir -p ${HANDLER_DIR}
 WORKDIR ${HANDLER_DIR}
 COPY . .

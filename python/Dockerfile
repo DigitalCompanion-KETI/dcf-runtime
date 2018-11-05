@@ -3,8 +3,6 @@ ARG PYTHON_VERSION=3.4
 
 FROM python:${PYTHON_VERSION}
 
-RUN echo "/usr/local/cuda-9.0/extras/CUPTI/lib64" > /etc/ld.so.conf.d/cupti.conf
-
 ARG ADDITIONAL_PACKAGE
 RUN apt-get update && apt-get install -y  \
 	build-essential \
@@ -12,9 +10,6 @@ RUN apt-get update && apt-get install -y  \
 	tar \
 	${ADDITIONAL_PACKAGE} \
     && rm -rf /var/lib/apt/lists/*
-
-RUN pip --no-cache-dir install --upgrade \
-	pip setuptools
 
 ARG WATCHER_VERSION=0.1.0
 ARG handler_file=handler.py
