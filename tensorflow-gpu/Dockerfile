@@ -21,6 +21,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	${ADDITIONAL_PACKAGE} \
     && rm -rf /var/lib/apt/lists/*
 
+ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
+
 RUN pip3 --no-cache-dir install --upgrade \
 	pip setuptools
 
@@ -28,7 +30,6 @@ ARG WATCHER_VERSION=0.1.0
 ARG handler_file=handler.py
 ARG handler_name=Handler
 
-ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
 ENV HANDLER_DIR=/dcf/handler
 ENV HANDLER_FILE=${HANDLER_DIR}/${handler_file}
 ENV HANDLER_NAME=${handler_name}
