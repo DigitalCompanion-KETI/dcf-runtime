@@ -1,7 +1,4 @@
 # Argruments from FROM
-ARG PYTHON_VERSION=3.4
-
-FROM python:${PYTHON_VERSION}
 FROM nvidia/cuda:9.0-base-ubuntu16.04
 
 RUN echo "/usr/local/cuda-9.0/extras/CUPTI/lib64" > /etc/ld.so.conf.d/cupti.conf
