@@ -27,7 +27,8 @@ RUN tar xvf watcher${WATCHER_VERSION}-python.tar
 RUN pip install -r requirements.txt
 
 # Copy handler
-COPY . .
+COPY ./src/handler.py .
+COPY ./requirements.txt .
 RUN touch ${HANDLER_DIR}/__init__.py
 RUN pip install -r requirements.txt
 
