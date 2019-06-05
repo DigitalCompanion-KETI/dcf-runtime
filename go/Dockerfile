@@ -36,7 +36,8 @@ RUN chmod +x /dcf-watcher
 # Copy user Function
 RUN mkdir -p ${HANDLER_DIR}
 WORKDIR ${HANDLER_DIR}
-COPY . .
+COPY ./src/handler.go .
+COPY ./Gopkg.toml .
 RUN dep ensure
 
 # Build handler
