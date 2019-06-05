@@ -42,7 +42,8 @@ RUN tar xvf watcher${WATCHER_VERSION}-python.tar
 RUN pip3 install -r requirements.txt
 
 # Copy handler
-COPY . .
+COPY ./src/handler.py .
+COPY ./requirements.txt .
 RUN touch ${HANDLER_DIR}/__init__.py
 RUN pip3 install -r requirements.txt
 
