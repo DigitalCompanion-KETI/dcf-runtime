@@ -5,22 +5,15 @@ runtimes:
       - GO_VERSION=1.10
     handler:
       name: Handler
-  python:
-    dir: python
+  python-cpu:
+    dir: python-cpu
     build_args:
       - PYTHON_VERSION=3.4
     handler:
       file: handler.py
       name: Handler
-  tensorflow-gpu:
-    dir: tensorflow-gpu
-    handler:
-      file: handler.py
-      name: Handler
-  tensorflow:
-    dir: tensorflow
-    build_args:
-      - PYTHON_VERSION=3.4
+  python-gpu:
+    dir: python-gpu
     handler:
       file: handler.py
       name: Handler
