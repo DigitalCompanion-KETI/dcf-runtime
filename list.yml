@@ -5,15 +5,10 @@ runtimes:
       - GO_VERSION=1.10
     handler:
       name: Handler
-  python-cpu:
-    dir: python-cpu
+  python:
+    dir: python
     build_args:
-      - PYTHON_VERSION=3.4
-    handler:
-      file: handler.py
-      name: Handler
-  python-gpu:
-    dir: python-gpu
+      - PYTHON_VERSION=3.6
     handler:
       file: handler.py
       name: Handler
