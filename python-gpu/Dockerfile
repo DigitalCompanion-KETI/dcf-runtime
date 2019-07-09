@@ -1,7 +1,24 @@
-# Argruments from FROM
-FROM nvidia/cuda:9.0-base-ubuntu16.04
+# all combination set in CUDA, cuDNN, Ubuntu is not Incompatible please check REFERENCE OF NVIDIA-DOCKER
+# REFERENCE OF NVIDIA-DOCKER 
+# https://hub.docker.com/r/nvidia/cuda/
 
-RUN echo "/usr/local/cuda-9.0/extras/CUPTI/lib64" > /etc/ld.so.conf.d/cupti.conf
+# Based on 2019.06.11
+# Supported CUDA version is
+# 8.0, 9.0, 9.1, 9.2, 10.0
+ARG CUDA_VERSION=9.0
+
+# Supported cuDNN version is
+# 5.1.10, 6.0.21, 7.1.2.21, 7.2.1.38, 7.5.0.56, 7.6.0.64, 
+ARG CUDNN_VERSION=7.2
+
+# Supported Ubuntu version is
+# 14.04, 16.04, 18.04
+ARG UBUNTU_VERSION=16.04
+
+# Argruments from FROM
+FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu${UBUNTU_VERSION}
+
+RUN echo "/usr/local/cuda-${CUDA_VERSION}/extras/CUPTI/lib64" > /etc/ld.so.conf.d/cupti.conf
 
 ARG ADDITIONAL_PACKAGE
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -9,15 +26,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	wget \
 	tar \
 	libgomp1 \
-	libcudnn7 \
-	cuda-command-line-tools-9-0 \
-	cuda-cudart-9-0 \
-	cuda-cufft-9-0 \
-	cuda-cublas-9-0 \
-	cuda-cusparse-9-0 \
-	cuda-curand-9-0 \
-	cuda-cusolver-9-0 \
+	libcudnn7=${CUDNN_VERSION}-1+cuda${CUDA_VERSION}  \
+	python \
+        python-dev \
+        python-numpy \
+        python-pip \
+        python-setuptools \
+        python3 \
+        python3-dev \
+        pyton3-numpy \
 	python3-pip \
+        python3-setuptools \
+        python3-tk \
+        libgtk2.0-dev \
 	${ADDITIONAL_PACKAGE} \
     && rm -rf /var/lib/apt/lists/*
 
