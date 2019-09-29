@@ -53,6 +53,29 @@ ARG CUDA_VERSION
 ARG CUDNN_VERSION
 ARG CUDA_VERSION_BACKUP
 
+RUN echo "/usr/local/cuda-${CUDA_VERSION_BACKUP}/extras/CUPTI/lib64" > /etc/ld.so.conf.d/cupti.conf
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	build-essential \
+	wget \
+	tar \
+	libgomp1 \
+        python-setuptools \
+        libgtk2.0-dev \
+        libcudnn7=${CUDNN_VERSION}-1+cuda${CUDA_VERSION_BACKUP} \
+        python${PYTHON_VERSION} \
+        python3-dev \
+        python3-numpy \
+        python3-pip \
+        python3-tk \
+        cmake \
+        unzip \
+        pkg-config \
+	${ADDITIONAL_PACKAGE} \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
+
 # Copy Watcher
 ARG GRPC_PYTHON_VERSION
 ARG handler_dir
@@ -68,29 +91,9 @@ RUN mkdir -p ${HANDLER_DIR}
 WORKDIR ${HANDLER_DIR}
 COPY --from=0 ${HANDLER_DIR} .
 
-RUN echo "/usr/local/cuda-${CUDA_VERSION_BACKUP}/extras/CUPTI/lib64" > /etc/ld.so.conf.d/cupti.conf
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-	build-essential \
-	wget \
-	tar \
-	libgomp1 \
-        python-setuptools \
-        libgtk2.0-dev \
-        libcudnn7=${CUDNN_VERSION}-1+cuda${CUDA_VERSION_BACKUP} \
-        python${PYTHON_VERSION} \
-        python3-dev \
-        python3-numpy \
-        python3-pip \
-        python3-setuptools \
-        python3-tk \
-	${ADDITIONAL_PACKAGE} \
-    && rm -rf /var/lib/apt/lists/*
-
-ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
-
-RUN pip3 --no-cache-dir install --upgrade pip setuptools
-RUN pip3 install grpcio==${GRPC_PYTHON_VERSION} grpcio-tools==${GRPC_PYTHON_VERSION} && \
+RUN pip3 install --upgrade pip==9.0.3 &&\
+    pip3 install setuptools && \
+    pip3 install grpcio==${GRPC_PYTHON_VERSION} grpcio-tools==${GRPC_PYTHON_VERSION} && \
     pip3 install -r requirements.txt
 
 HEALTHCHECK --interval=1s CMD [ -e /tmp/.lock ] || exit 1
