@@ -8,19 +8,7 @@ runtimes:
   python:
     dir: python
     build_args:
-      - PYTHON_VERSION=3.4
-    handler:
-      file: handler.py
-      name: Handler
-  tensorflow-gpu:
-    dir: tensorflow-gpu
-    handler:
-      file: handler.py
-      name: Handler
-  tensorflow:
-    dir: tensorflow
-    build_args:
-      - PYTHON_VERSION=3.4
+      - PYTHON_VERSION=3.6
     handler:
       file: handler.py
       name: Handler
