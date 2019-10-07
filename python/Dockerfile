@@ -89,6 +89,7 @@ ENV HANDLER_NAME=${handler_name}
 
 RUN mkdir -p ${HANDLER_DIR}
 WORKDIR ${HANDLER_DIR}
+COPY . .
 COPY --from=0 ${HANDLER_DIR} .
 
 RUN pip3 install --upgrade pip==9.0.3 &&\
