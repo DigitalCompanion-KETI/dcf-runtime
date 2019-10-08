@@ -54,6 +54,7 @@ ARG CUDNN_VERSION
 ARG CUDA_VERSION_BACKUP
 
 RUN echo "/usr/local/cuda-${CUDA_VERSION_BACKUP}/extras/CUPTI/lib64" > /etc/ld.so.conf.d/cupti.conf
+RUN sed -i 's/archive.ubuntu.com/kr.archive.ubuntu.com/g' /etc/apt/sources.list
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
 	build-essential \
