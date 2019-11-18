@@ -46,15 +46,18 @@ RUN touch ${handler_dir}/src/__init__.py && \
     cp -r /dcf/watcher/* ${handler_dir}
 
 # 2-Stage
-FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu${UBUNTU_VERSION}
+FROM nvidia/cuda:${CUDA_VERSION}-cudnn{CUDNN_VERSION}-devel-ubuntu${UBUNTU_VERSION}
 
 # Arguments for Nvidia-Docker
 ARG CUDA_VERSION
 ARG CUDNN_VERSION
 ARG CUDA_VERSION_BACKUP
 
-RUN echo "/usr/local/cuda-${CUDA_VERSION_BACKUP}/extras/CUPTI/lib64" > /etc/ld.so.conf.d/cupti.conf
-RUN sed -i 's/archive.ubuntu.com/kr.archive.ubuntu.com/g' /etc/apt/sources.list
+#RUN sed -i 's/archive.ubuntu.com/kr.archive.ubuntu.com/g' /etc/apt/sources.list
+# change mirrors in ubuntu server: us to korea
+RUN sed -i 's/security.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list && \
+    sed -i 's/us.archive.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list && \
+    sed -i 's/archive.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
 	build-essential \
@@ -63,7 +66,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	libgomp1 \
         python-setuptools \
         libgtk2.0-dev \
-        libcudnn7=${CUDNN_VERSION}-1+cuda${CUDA_VERSION_BACKUP} \
         python${PYTHON_VERSION} \
         python3-dev \
         python3-numpy \
