@@ -46,7 +46,7 @@ RUN touch ${handler_dir}/src/__init__.py && \
     cp -r /dcf/watcher/* ${handler_dir}
 
 # 2-Stage
-FROM nvidia/cuda:${CUDA_VERSION}-cudnn{CUDNN_VERSION}-devel-ubuntu${UBUNTU_VERSION}
+FROM nvidia/cuda:${CUDA_VERSION}-cudnn${CUDNN_VERSION}-devel-ubuntu${UBUNTU_VERSION}
 
 # Arguments for Nvidia-Docker
 ARG CUDA_VERSION
