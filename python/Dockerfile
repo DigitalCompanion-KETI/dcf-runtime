@@ -19,7 +19,7 @@ ARG handler_file_path=${handler_dir}/src/${handler_file}
 
 # Global arguments for Nvidia-docker
 ARG CUDA_VERSION=9.0
-ARG CUDNN_VERSION=7.4.1.5
+ARG CUDNN_VERSION=7
 ARG UBUNTU_VERSION=16.04
 
 # ARG variable was changed after passing `FROM`
