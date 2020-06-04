@@ -1,3 +1,13 @@
+---
+name: Bug report
+about: Create a report to help us improve
+title: "[BUG] "
+labels: bug
+assignees: ''
+
+---
+
+
 ## 🐛 Bug
 
 <!-- 어떠한 버그인지 명확하고 간결하게 설명 부탁드립니다.-->

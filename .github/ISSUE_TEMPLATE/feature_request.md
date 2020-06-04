@@ -1,3 +1,12 @@
+---
+name: Feature request
+about: Suggest an idea for this project
+title: "[FEATURE] "
+labels: enhancement
+assignees: ''
+
+---
+
 ## 🚀 Feature
 <!-- 제안하는 기능에 대해서 간결하고 명확하게 설명해주세요.-->
 
