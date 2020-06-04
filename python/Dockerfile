@@ -16,10 +16,11 @@ ARG handler_file=handler.py
 ARG handler_name=Handler
 ARG handler_dir=/dcf/handler
 ARG handler_file_path=${handler_dir}/src/${handler_file}
+ARG watcher_dir=/dcf/watcher
 
 # Global arguments for Nvidia-docker
 ARG CUDA_VERSION=9.0
-ARG CUDNN_VERSION=7.4.1.5
+ARG CUDNN_VERSION=7
 ARG UBUNTU_VERSION=16.04
 
 # ARG variable was changed after passing `FROM`
@@ -39,21 +40,24 @@ ARG handler_name
 ARG handler_file_path
 
 # Watcher Setting
-RUN mkdir -p ${handler_dir}
+RUN mkdir -p ${handler_dir} ${watcher_dir}
 WORKDIR ${handler_dir}
 COPY . .
-RUN touch ${handler_dir}/src/__init__.py && \
-    cp -r /dcf/watcher/* ${handler_dir}
+RUN touch ${handler_dir}/src/__init__.py 
 
 # 2-Stage
-FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu${UBUNTU_VERSION}
+FROM nvidia/cuda:${CUDA_VERSION}-cudnn${CUDNN_VERSION}-devel-ubuntu${UBUNTU_VERSION}
 
 # Arguments for Nvidia-Docker
 ARG CUDA_VERSION
 ARG CUDNN_VERSION
 ARG CUDA_VERSION_BACKUP
 
-RUN echo "/usr/local/cuda-${CUDA_VERSION_BACKUP}/extras/CUPTI/lib64" > /etc/ld.so.conf.d/cupti.conf
+#RUN sed -i 's/archive.ubuntu.com/kr.archive.ubuntu.com/g' /etc/apt/sources.list
+# change mirrors in ubuntu server: us to korea
+RUN sed -i 's/security.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list && \
+    sed -i 's/us.archive.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list && \
+    sed -i 's/archive.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
 	build-essential \
@@ -62,7 +66,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	libgomp1 \
         python-setuptools \
         libgtk2.0-dev \
-        libcudnn7=${CUDNN_VERSION}-1+cuda${CUDA_VERSION_BACKUP} \
         python${PYTHON_VERSION} \
         python3-dev \
         python3-numpy \
@@ -82,19 +85,25 @@ ARG handler_dir
 ARG handler_file
 ARG handler_name
 ARG handler_file_path
+ARG watcher_dir
+
 
 ENV HANDLER_DIR=${handler_dir}
 ENV HANDLER_FILE=${handler_file_path}
 ENV HANDLER_NAME=${handler_name}
+ENV WATCHER_DIR=${watcher_dir}
 
-RUN mkdir -p ${HANDLER_DIR}
-WORKDIR ${HANDLER_DIR}
-COPY --from=0 ${HANDLER_DIR} .
+RUN mkdir -p ${HANDLER_DIR} ${WATCHER_DIR}
+
+COPY --from=0 ${HANDLER_DIR} ${HANDLER_DIR}
+COPY --from=0 ${WATCHER_DIR} ${WATCHER_DIR}
+
+WORKDIR ${WATCHER_DIR}
 
 RUN pip3 install --upgrade pip==9.0.3 &&\
     pip3 install setuptools && \
     pip3 install grpcio==${GRPC_PYTHON_VERSION} grpcio-tools==${GRPC_PYTHON_VERSION} && \
-    pip3 install -r requirements.txt
+    pip3 install -r ${HANDLER_DIR}/requirements.txt
 
 HEALTHCHECK --interval=1s CMD [ -e /tmp/.lock ] || exit 1
 
