@@ -64,20 +64,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	wget \
 	tar \
 	libgomp1 \
-        python-setuptools \
-        libgtk2.0-dev \
-        python${PYTHON_VERSION} \
-        python3-dev \
-        python3-numpy \
-        python3-pip \
-        python3-tk \
-        cmake \
-        unzip \
-        pkg-config \
+    python-setuptools \
+    libgtk2.0-dev \
+    python${PYTHON_VERSION} \
+    python3-dev \
+    python3-numpy \
+    python3-pip \
+    python3-tk \
+    cmake \
+    unzip \
+    pkg-config \
 	${ADDITIONAL_PACKAGE} \
     && rm -rf /var/lib/apt/lists/*
 
-ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
+# Deep learning framework as TensorFlow / PyTorch / MXNet require GPU software library path
+ENV LD_LIBRARY_PATH=/usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda-${CUDA_VERSION_BACKUP}/compat/:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/usr/local/cuda-${CUDA_VERSION_BACKUP}/targets/x86_64-linux/lib:$LD_LIBRARY_PATH
 
 # Copy Watcher
 ARG GRPC_PYTHON_VERSION
@@ -86,7 +89,6 @@ ARG handler_file
 ARG handler_name
 ARG handler_file_path
 ARG watcher_dir
-
 
 ENV HANDLER_DIR=${handler_dir}
 ENV HANDLER_FILE=${handler_file_path}
@@ -100,7 +102,7 @@ COPY --from=0 ${WATCHER_DIR} ${WATCHER_DIR}
 
 WORKDIR ${WATCHER_DIR}
 
-RUN pip3 install --upgrade pip==9.0.3 &&\
+RUN pip3 install --upgrade pip &&\
     pip3 install setuptools && \
     pip3 install grpcio==${GRPC_PYTHON_VERSION} grpcio-tools==${GRPC_PYTHON_VERSION} && \
     pip3 install -r ${HANDLER_DIR}/requirements.txt
