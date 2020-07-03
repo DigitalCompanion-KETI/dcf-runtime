@@ -97,15 +97,15 @@ ENV HANDLER_NAME=${handler_name}
 
 RUN mkdir -p ${HANDLER_DIR}
 WORKDIR ${HANDLER_DIR}
-COPY . .
 COPY --from=0 ${HANDLER_DIR} .
+COPY . .
 
 WORKDIR ${HANDLER_DIR}
 
 RUN python3 -m pip install --upgrade pip &&\
     pip3 install setuptools && \
     pip3 install grpcio==${GRPC_PYTHON_VERSION} grpcio-tools==${GRPC_PYTHON_VERSION} && \
-    pip3 install -r ${HANDLER_DIR}/requirements.txt
+    pip3 install -r requirements.txt
 
 HEALTHCHECK --interval=1s CMD [ -e /tmp/.lock ] || exit 1
 
