@@ -48,6 +48,8 @@ RUN touch ${handler_dir}/src/__init__.py
 # 2-Stage
 FROM nvidia/cuda:${CUDA_VERSION}-cudnn${CUDNN_VERSION}-devel-ubuntu${UBUNTU_VERSION}
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 # Arguments for Nvidia-Docker
 ARG CUDA_VERSION
 ARG CUDNN_VERSION
