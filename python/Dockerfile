@@ -104,7 +104,7 @@ COPY --from=0 ${HANDLER_DIR} .
 
 WORKDIR ${HANDLER_DIR}
 
-RUN pip3 install --upgrade pip &&\
+RUN python3 -m pip install --upgrade pip &&\
     pip3 install setuptools && \
     pip3 install grpcio==${GRPC_PYTHON_VERSION} grpcio-tools==${GRPC_PYTHON_VERSION} && \
     pip3 install -r ${HANDLER_DIR}/requirements.txt
