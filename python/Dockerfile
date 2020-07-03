@@ -16,7 +16,6 @@ ARG handler_file=handler.py
 ARG handler_name=Handler
 ARG handler_dir=/dcf/handler
 ARG handler_file_path=${handler_dir}/src/${handler_file}
-ARG watcher_dir=/dcf/watcher
 
 # Global arguments for Nvidia-docker
 ARG CUDA_VERSION=9.0
@@ -40,10 +39,11 @@ ARG handler_name
 ARG handler_file_path
 
 # Watcher Setting
-RUN mkdir -p ${handler_dir} ${watcher_dir}
+RUN mkdir -p ${handler_dir}
 WORKDIR ${handler_dir}
 COPY . .
-RUN touch ${handler_dir}/src/__init__.py 
+RUN touch ${handler_dir}/src/__init__.py && \
+    cp -r /dcf/watcher/* ${handler_dir}
 
 # 2-Stage
 FROM nvidia/cuda:${CUDA_VERSION}-cudnn${CUDNN_VERSION}-devel-ubuntu${UBUNTU_VERSION}
@@ -90,12 +90,10 @@ ARG handler_dir
 ARG handler_file
 ARG handler_name
 ARG handler_file_path
-ARG watcher_dir
 
 ENV HANDLER_DIR=${handler_dir}
 ENV HANDLER_FILE=${handler_file_path}
 ENV HANDLER_NAME=${handler_name}
-ENV WATCHER_DIR=${watcher_dir}
 
 RUN mkdir -p ${HANDLER_DIR}
 WORKDIR ${HANDLER_DIR}
