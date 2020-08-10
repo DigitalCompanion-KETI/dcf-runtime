@@ -43,6 +43,9 @@ RUN dep ensure
 # Build handler
 RUN go build -o ${HANDLER_FILE} -buildmode=plugin .
 
+EXPOSE 50051
+EXPOSE 50052
+
 HEALTHCHECK --interval=2s CMD [ -e /tmp/.lock ] || exit 1
 
 CMD ["/dcf-watcher"]
