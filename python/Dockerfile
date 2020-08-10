@@ -109,5 +109,8 @@ RUN python3 -m pip install --upgrade pip &&\
 
 HEALTHCHECK --interval=1s CMD [ -e /tmp/.lock ] || exit 1
 
+EXPOSE 50051
+EXPOSE 50052
+
 ENTRYPOINT ["python3"]
 CMD ["server.py"]
